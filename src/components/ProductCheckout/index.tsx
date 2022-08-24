@@ -1,31 +1,76 @@
+import { removeProduct, updateProductAmount } from "../../app/cartSlice";
+import { useAppDispatch } from "../../app/hooks";
+import { formatPrice } from "../../util/format";
 import { ProductCheckoutContainer } from "./styles";
 
-export function ProductCheckout() {
+interface ProductCheckoutProps {
+  product: {
+    id: number;
+    amount: number;
+    name: string;
+    photo: string;
+    price: string;
+  }
+}
+
+interface ProductUpdate {
+  id: number;
+  amount: number;
+  name: string;
+  photo: string;
+  price: string;
+}
+
+export function ProductCheckout({ product }: ProductCheckoutProps) {
+  const dispatch = useAppDispatch();
+
+  function handleRemoveProduct() {
+    dispatch(removeProduct(product))
+  }
+
+  
+function handleProductIncrement(product: ProductUpdate) {
+  console.log(product.amount + 1)
+  dispatch(updateProductAmount({ amount: product.amount + 1, id: product.id }))
+}
+
+function handleProductDecrement(product: ProductUpdate) {
+  dispatch(updateProductAmount({ amount: product.amount - 1, id: product.id }))
+}
+  
   return (
     <ProductCheckoutContainer>
       <picture>
-        <img src="/apple-watch.png" alt="" />
+        <img src={product.photo} alt="" />
       </picture>
-      <p>Apple Watch Series 4 GPS</p>
+      <p>{product.name}</p>
 
       <div>
         <div>
           <p>Qtd:</p>
           <div>
-            <button>
+            <button
+              onClick={() => handleProductDecrement(product)}
+            >
               -
             </button>
-            <span>9</span>
-            <button>
+            <span>{product.amount}</span>
+            <button
+              onClick={() => handleProductIncrement(product)}
+            >
               +
             </button>
           </div>
         </div>
-        <strong>R$399</strong>
+        <strong>{formatPrice(Number(product.price))}</strong>
       </div>
 
       
-      <button>x</button>
+      <button
+        onClick={handleRemoveProduct}
+      >
+        x
+      </button>
     </ProductCheckoutContainer>
   )
 }

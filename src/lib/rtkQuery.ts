@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { HYDRATE } from 'next-redux-wrapper'
 
 type GetAllProduts = {
   count: number;
@@ -15,6 +16,11 @@ type GetAllProduts = {
 export const productsApi = createApi({
   reducerPath: 'productsApi',
   baseQuery: fetchBaseQuery({ baseUrl: 'https://mks-frontend-challenge-api.herokuapp.com/api/v1' }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
   endpoints: (builder) => ({
     getAllProducts: builder.query<GetAllProduts, {}>({
       query: () => ({
@@ -30,4 +36,5 @@ export const productsApi = createApi({
   }),
 })
 
-export const { useGetAllProductsQuery } = productsApi
+export const { useGetAllProductsQuery, util: { getRunningOperationPromises } } = productsApi
+export const { getAllProducts } = productsApi.endpoints;
