@@ -16,6 +16,7 @@ export const ProductCheckoutContainer = styled.div`
   @media(max-width: 576px) {
     width: 15.625rem;
     height: 100%;
+    max-height: 13.4769rem;
     flex-direction: column;
     padding: 1.375rem 0;
   }
